@@ -1,0 +1,28 @@
+name: Docker
+
+on:
+  push:
+    paths-ignore: [ '**.md' ]
+  pull_request:
+    paths-ignore: [ '**.md' ]
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - image: "offlineimap"
+            platforms: linux/amd64,linux/arm64
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - uses: dioptra-io/publish-docker-action@v1.3
+        with:
+          context: ${{ matrix.image }}
+          file: ${{ matrix.image }}/Dockerfile
+          image: dioptra-io/docker-images/${{ matrix.image }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          platforms: ${{ matrix.platforms }}
