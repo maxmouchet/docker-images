@@ -1,6 +1,4 @@
-FROM python:3.10
-RUN apt-get update \
-    && apt-get install --no-install-recommends --yes tini \
-    && rm -rf /var/lib/apt/lists/*
-RUN pip install --no-cache github-backup
+FROM python:3.11-alpine
+RUN apk add --no-cache git tini
+RUN pip install --no-cache-dir github-backup
 ENTRYPOINT ["tini", "--"]
